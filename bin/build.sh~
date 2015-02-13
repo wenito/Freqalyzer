@@ -1,0 +1,6 @@
+source defines
+
+echo -e "\033[4;34mBuilding project\n\033[0m"
+gcc -L../lib -I../inc ../src/test.c -o $OUTPUT_NAME -lfmodex64
+echo -e "\033[4;34mDone\n\033[0m"
+

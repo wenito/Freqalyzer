@@ -1,0 +1,71 @@
+
+								****** PROJET ILLUSTRATIF FMOD ************
+
+
+
+IMPORTANT:
+	J'ai utilisé les librairies situées dans le dossier api/lowlevel/lib/x86_64
+	Si tu veux utiliser d'autres librairies FMOD (comme x86)
+	Il faut les copier dans mon dossier /fmod_test/lib
+	
+
+1. Description arborescence
+---------------------------
+
+	+fmod_test 		:dossier du projet test
+		+bin 		:binaires, executables, scripts, sorties de compilation
+		+inc 		:headers (*.h, *.hpp)
+		  +fmod		:headers de la librairies FMOD
+		+lib 		:librairies (*.so, *.a, *.lib)
+		  +fmod 	:fichiers objets de la librairie fmod
+		+sounds 	:sons
+		+src 		:fichiers source 
+		
+		
+		
+2. Les fichiers importants
+--------------------------
+
+	/fmod_test/bin/defines
+		fixe des variables qui sont utilisées dans 
+		les script build.sh et run.sh (par exemple OUTPUT_NAME correspond au nom du fichier exécutable de sortie
+	
+	/fmod_test/bin/build.sh
+		compile, link les librairies
+		et produit un fichier binaire exécutable 
+		(l'exécuter en utilisant run.sh)
+		
+	/fmod_test/bin/run.sh	
+		fixe la variable d'environement LD_LIBRARY_PATH pour indiquer à l'exécutable 
+		où trouver les librairies, lance l'exécutable (son nom est dans le fichier defines)
+	
+	
+3. Utiliser le projet
+---------------------
+
+	-On fait ses codes source dans le dossier "src"
+	-On actualise les scripts build.sh et run.sh (dissier "bin") si on a ajouté des nouveaux fichiers sources
+		ou de nouvelles librairies
+	-On exécute build.sh dans le dossier "bin"
+	-On exécute run.sh dans le dossier "bin" pour lancer le programme final
+	
+4. Notes
+--------
+
+	Librairies
+		Si tu ajoutes une librairie les placer directement
+		dans le dossier /fmod_test/lib puis ne pas oublier 
+		des les donner au linker: dans le fichier /fmod_test/bin/build.sh
+		il faut ajouter -lnomdelalib à la fin de la commande gcc.
+		
+		Il faut aussi placer les headers dans un nouveau dossier dans le 
+		répertoire /fmod_test/inc/
+		
+	Makefiles
+		Les makefiles sont mieux pour des gros projets en C
+		Ils gèrent les sources et leurs dépendances
+		
+	
+		
+	
+	

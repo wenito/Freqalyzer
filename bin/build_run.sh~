@@ -1,0 +1,7 @@
+OUTPUT_NAME=fmod_test_bin
+
+gcc -L../lib/fmod/x86_64 -I../inc/fmod ../src/test.c -o $OUTPUT_NAME -lfmod
+
+export LD_LIBRARY_PATH=../lib/fmod/x86_64
+./$OUTPUT_NAME
+unset LD_LIBRARY_PATH
