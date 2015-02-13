@@ -7,6 +7,14 @@
 *
 */
 
+#include <fmod/fmod.h>
+#include <fmod/fmod_errors.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#include "constantes.h"
 
 /**
 * \fn W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action)
@@ -160,7 +168,6 @@ void W_event(SDL_Surface *ecran, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Su
 		default:
 			break;
 	}
-
 	SDL_Flip(ecran);
 }
 
