@@ -9,9 +9,11 @@
 #define CONTROLLER_SIZE		30
 
 enum {PAUSE, PLAY, STOP};
+enum {UP, DOWN};
 
 int W_LoadSurface(SDL_Surface *fond, SDL_Surface *play, SDL_Surface *pause, SDL_Surface *stop, SDL_Surface *volup, SDL_Surface *voldo, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo);
 void W_event(SDL_Surface *ecran, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo);
+int W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action);
 
 int main(int argc, char *argv[])
 {
@@ -165,23 +167,9 @@ int main(int argc, char *argv[])
 					status = STOP;
 				}
 				if (event.button.x > (100 + CONTROLLER_SIZE * 3) && event.button.x < (100 + CONTROLLER_SIZE * 4) && event.button.y > 520 && event.button.y < (520 + CONTROLLER_SIZE))
-				{
-					printf("\nLa valeur du volume est : %f", volume);
-					if(volume < 1)
-						volume += 0.1;
-					else if(volume > 1)
-						volume = 1;
-					FMOD_Channel_SetVolume(channel, volume);
-				}
+					result = W_GestionVolume(&volume, channel, UP);
 				if (event.button.x > (100 + CONTROLLER_SIZE * 4) && event.button.x < (100 + CONTROLLER_SIZE * 5) && event.button.y > 520 && event.button.y < (520 + CONTROLLER_SIZE))
-				{
-					printf("\nLa valeur du volume est : %f", volume);
-					if(volume > 0)
-						volume -= 0.1;
-					else if(volume < 0)
-						volume = 0;
-					FMOD_Channel_SetVolume(channel, volume);
-				}
+					result = W_GestionVolume(&volume, channel, DOWN);
 				break;
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym)
@@ -199,20 +187,10 @@ int main(int argc, char *argv[])
 						status = PLAY;
 						break;
 					case SDLK_UP:
-						printf("\nLa valeur du volume est : %f", volume);
-						if(volume < 1)
-							volume += 0.1;
-						else if(volume > 1)
-							volume = 1;
-						FMOD_Channel_SetVolume(channel, volume);
+						result = W_GestionVolume(&volume, channel, UP);
 						break;
 					case SDLK_DOWN:
-						printf("\nLa valeur du volume est : %f", volume);
-						if(volume > 0)
-							volume -= 0.1;
-						else if(volume < 0)
-							volume = 0;
-						FMOD_Channel_SetVolume(channel, volume);
+						result = W_GestionVolume(&volume, channel, DOWN);
 						break;
 					case SDLK_p:
 						FMOD_System_GetChannel(system, 512, &channel);
@@ -290,6 +268,35 @@ int main(int argc, char *argv[])
 
 	SDL_Quit();
 
+	return EXIT_SUCCESS;
+}
+
+
+int W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action)
+{
+	switch(vol_action)
+	{
+		case UP :
+			printf("\nLa valeur du volume est : %f", *volume);
+			if(*volume < 1)
+				*volume += 0.1;
+			else if(*volume > 1)
+				*volume = 1;
+			FMOD_Channel_SetVolume(channel, *volume);
+			break;
+		case DOWN :
+			printf("\nLa valeur du volume est : %f", *volume);
+			if(*volume > 0)
+				*volume -= 0.1;
+			else if(*volume < 0)
+				*volume = 0;
+			FMOD_Channel_SetVolume(channel, *volume);
+			break;
+		default:
+			printf("\nProblème de gestion du volume");
+			exit(EXIT_FAILURE);
+			break;
+	}
 	return EXIT_SUCCESS;
 }
 
