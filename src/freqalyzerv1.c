@@ -16,18 +16,19 @@
 #include <unistd.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-
+#include "constantes.h"
+/*
 #define CONTROLLER_SIZE		30
 
 enum {PAUSE, PLAY, STOP};
 enum {UP, DOWN};
-enum {P_IMAGE, P_SON, P_PAUSE};
+enum {P_IMAGE, P_CHARGSON, P_LECTURE, P_PAUSE, P_CREASON};
 
 int W_LoadSurface(SDL_Surface *fond, SDL_Surface *play, SDL_Surface *pause, SDL_Surface *stop, SDL_Surface *volup, SDL_Surface *voldo, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo);
 void W_event(SDL_Surface *ecran, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo);
 int W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action);
-int W_GestionErreurChargIm(SDL_Surface *valeur, const char *titre_im);
-
+int W_GestionErreur(int sujet,int valeur, SDL_Surface *surface, const char *titre_im);
+*/
 int main(int argc, char *argv[])
 {
 	int att = 1, motion_state = 0, status = STOP;
@@ -83,43 +84,46 @@ int main(int argc, char *argv[])
 
 	//Chargement des images
 	fond = IMG_Load("../pictures/fond.jpg");
-	W_GestionErreurChargIm(fond, "fond.jpg");
+	W_GestionErreur(P_IMAGE, 0, fond, "fond.jpg");
+//	W_GestionErreurChargIm(fond, "fond.jpg");
 
 	play = IMG_Load("../pictures/play.jpg");
-	W_GestionErreurChargIm(fond, "play.jpg");
+//	W_GestionErreurChargIm(fond, "play.jpg");
 
 	pause = IMG_Load("../pictures/pause.jpg");
-	W_GestionErreurChargIm(fond, "pause.jpg");
+//	W_GestionErreurChargIm(fond, "pause.jpg");
 
 	stop = IMG_Load("../pictures/stop.jpg");
-	W_GestionErreurChargIm(fond, "stop.jpg");
+//	W_GestionErreurChargIm(fond, "stop.jpg");
 
 	volumeup = IMG_Load("../pictures/volume_up.jpg");
-	W_GestionErreurChargIm(fond, "volume_up.jpg");
+//	W_GestionErreurChargIm(fond, "volume_up.jpg");
 
 	volumedown = IMG_Load("../pictures/volume_down.jpg");
-	W_GestionErreurChargIm(fond, "volume_down.jpg");
+//	W_GestionErreurChargIm(fond, "volume_down.jpg");
 
 	iplay = IMG_Load("../pictures/iplay.jpg");
-	W_GestionErreurChargIm(fond, "iplay.jpg");
+//	W_GestionErreurChargIm(fond, "iplay.jpg");
 
 	ipause = IMG_Load("../pictures/ipause.jpg");
-	W_GestionErreurChargIm(fond, "ipause.jpg");
+//	W_GestionErreurChargIm(fond, "ipause.jpg");
 
 	istop = IMG_Load("../pictures/istop.jpg");
-	W_GestionErreurChargIm(fond, "istop.jpg");
+//	W_GestionErreurChargIm(fond, "istop.jpg");
 
 	ivolup = IMG_Load("../pictures/ivolume_up.jpg");
-	W_GestionErreurChargIm(fond, "ivolume_up.jpg");
+//	W_GestionErreurChargIm(fond, "ivolume_up.jpg");
 
 	ivoldo = IMG_Load("../pictures/ivolume_down.jpg");
-	W_GestionErreurChargIm(fond, "ivolume_down.jpg");
+//	W_GestionErreurChargIm(fond, "ivolume_down.jpg");
 
 	//Allocation de mémoire à system
 	result = FMOD_System_Create(&system);
+	W_GestionErreur(P_CREASON, result, NULL, "");
 
 	//Initialisation
 	result = FMOD_System_Init(system, 32, FMOD_INIT_NORMAL, extradriverdata);
+	W_GestionErreur(P_CHARGSON, result, NULL, "");
 
 	result = FMOD_System_CreateSound(system, "../sounds/pacman.wav", FMOD_2D | FMOD_CREATESTREAM, 0, &sound);
 
@@ -152,6 +156,7 @@ int main(int argc, char *argv[])
 				{
 					//jouer le son et mettre en pause le programme le temps de sa lecture
 					result=FMOD_System_PlaySound(system, sound, 0, 0, &channel);
+					W_GestionErreur(P_LECTURE, result, NULL, "");
 					unsigned int length;
 					FMOD_Sound_GetLength(sound, &length, FMOD_TIMEUNIT_MS);
 					FMOD_Channel_GetVolume(channel, &volume);
@@ -321,15 +326,57 @@ int W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action)
 	return EXIT_SUCCESS;
 }
 
-int W_GestionErreurChargIm(SDL_Surface *valeur, const char *titre_im)
+/**
+* \fn int W_GestionErreur(int sujet,int valeur, SDL_Surface *surface, const char *titre_im)
+* \brief Gestion des erreurs
+*
+* \param[in] sujet variable permettant de définir l'erreur à vérifier
+* \param[in] valeur variable retour de fonctions diverses
+* \param[in] Pointeur sur structure de type SDL_Surface
+* \param[in] Chaîne de caractère
+* \return Etat d'execution du programme
+*/
+
+int W_GestionErreur(int sujet,int valeur, SDL_Surface *surface, const char *titre_im)
 {
-	if (valeur == NULL)
-		{
-			printf("Erreur lors du chargement de l'image %s\n", titre_im);
-			exit(EXIT_FAILURE);
-		}
-	else
-		return EXIT_SUCCESS;
+	switch(sujet)
+	{
+		case P_IMAGE:
+			if (surface == NULL)
+			{
+				printf("\nErreur lors du chargement de l'image %s\n", titre_im);
+				exit(EXIT_FAILURE);
+			}
+			else
+				return EXIT_SUCCESS;
+			break;
+		case P_LECTURE:
+			if(valeur != 0)
+			{
+				printf("\nErreur lors de la lecture\n");
+				exit(EXIT_FAILURE);
+			}else
+				return EXIT_SUCCESS;
+			break;
+		case P_CREASON:
+			if(valeur != FMOD_OK)
+			{
+				printf("\nErreur lors de l'allocation mémoire du fichier audio\n");
+				exit(EXIT_FAILURE);
+			}else
+				return EXIT_SUCCESS;
+			break;
+		case P_CHARGSON:
+			if(valeur != FMOD_OK)
+			{
+				printf("\nErreur lors du chargement du son\n");
+				exit(EXIT_FAILURE);
+			}else
+				return EXIT_SUCCESS;
+			break;
+		default:
+			break;
+	}
 }
 
 //Chargement de l'image de fond
