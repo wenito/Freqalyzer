@@ -1,3 +1,14 @@
+/**
+* \file freqalyzerv1.c
+* \brief Programme principal
+* \author Wenceslas MARIE SAINTE
+* \version bêta
+* \date 02 février 2015
+*
+* Programme d'analyse spectrale pour les signaux audio et radio
+* (continuité du projet de L3 - niversité de Rennes 1 - France)
+*/
+
 #include <fmod/fmod.h>
 #include <fmod/fmod_errors.h>
 #include <stdio.h>
@@ -10,10 +21,12 @@
 
 enum {PAUSE, PLAY, STOP};
 enum {UP, DOWN};
+enum {P_IMAGE, P_SON, P_PAUSE};
 
 int W_LoadSurface(SDL_Surface *fond, SDL_Surface *play, SDL_Surface *pause, SDL_Surface *stop, SDL_Surface *volup, SDL_Surface *voldo, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo);
 void W_event(SDL_Surface *ecran, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo);
 int W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action);
+int W_GestionErreurChargIm(SDL_Surface *valeur, const char *titre_im);
 
 int main(int argc, char *argv[])
 {
@@ -68,40 +81,39 @@ int main(int argc, char *argv[])
 	//Titrage de la fenêtre
 	SDL_WM_SetCaption("Freqalyzer", NULL);
 
-	//Chargement de l'image de fond
+	//Chargement des images
 	fond = IMG_Load("../pictures/fond.jpg");
-	if (fond == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "fond.jpg");
+
 	play = IMG_Load("../pictures/play.jpg");
-	if (play == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "play.jpg");
+
 	pause = IMG_Load("../pictures/pause.jpg");
-	if (pause == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "pause.jpg");
+
 	stop = IMG_Load("../pictures/stop.jpg");
-	if (stop == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "stop.jpg");
+
 	volumeup = IMG_Load("../pictures/volume_up.jpg");
-	if (volumeup == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "volume_up.jpg");
+
 	volumedown = IMG_Load("../pictures/volume_down.jpg");
-	if (volumedown == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "volume_down.jpg");
+
 	iplay = IMG_Load("../pictures/iplay.jpg");
-	if (iplay == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "iplay.jpg");
+
 	ipause = IMG_Load("../pictures/ipause.jpg");
-	if (ipause == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "ipause.jpg");
+
 	istop = IMG_Load("../pictures/istop.jpg");
-	if (istop == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "istop.jpg");
+
 	ivolup = IMG_Load("../pictures/ivolume_up.jpg");
-	if (ivolup == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "ivolume_up.jpg");
+
 	ivoldo = IMG_Load("../pictures/ivolume_down.jpg");
-	if (ivoldo == NULL)
-		exit(EXIT_FAILURE);
+	W_GestionErreurChargIm(fond, "ivolume_down.jpg");
 
 	//Allocation de mémoire à system
 	result = FMOD_System_Create(&system);
@@ -271,6 +283,15 @@ int main(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
+/**
+* \fn W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action)
+* \brief Fonction de gestion du volume sonore
+*
+* \param[in, out] volume Pointeur sur une variable permettant de gérer le volume sonore
+* \param[in, out] channel Pointeur sur un le canal du fichier son
+* \param[in] vol_action variable permettant de gérer l'action sur le volume sonore
+* \return Etat d'execution du programme
+*/
 
 int W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action)
 {
@@ -300,42 +321,31 @@ int W_GestionVolume(float *volume, FMOD_CHANNEL *channel, int vol_action)
 	return EXIT_SUCCESS;
 }
 
+int W_GestionErreurChargIm(SDL_Surface *valeur, const char *titre_im)
+{
+	if (valeur == NULL)
+		{
+			printf("Erreur lors du chargement de l'image %s\n", titre_im);
+			exit(EXIT_FAILURE);
+		}
+	else
+		return EXIT_SUCCESS;
+}
+
 //Chargement de l'image de fond
 int W_LoadSurface(SDL_Surface *fond, SDL_Surface *play, SDL_Surface *pause, SDL_Surface *stop, SDL_Surface *volup, SDL_Surface *voldo, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo)
 {
 	fond = IMG_Load("../pictures/fond.jpg");
-	if (fond == NULL)
-		exit(EXIT_FAILURE);
 	play = IMG_Load("../pictures/play.jpg");
-	if (play == NULL)
-		exit(EXIT_FAILURE);
 	pause = IMG_Load("../pictures/pause.jpg");
-	if (pause == NULL)
-		exit(EXIT_FAILURE);
 	stop = IMG_Load("../pictures/stop.jpg");
-	if (stop == NULL)
-		exit(EXIT_FAILURE);
 	volup = IMG_Load("../pictures/volume_up.jpg");
-	if (volup == NULL)
-		exit(EXIT_FAILURE);
 	voldo = IMG_Load("../pictures/volume_down.jpg");
-	if (voldo == NULL)
-		exit(EXIT_FAILURE);
 	iplay = IMG_Load("../pictures/iplay.jpg");
-	if (iplay == NULL)
-		exit(EXIT_FAILURE);
 	ipause = IMG_Load("../pictures/ipause.jpg");
-	if (ipause == NULL)
-		exit(EXIT_FAILURE);
 	istop = IMG_Load("../pictures/istop.jpg");
-	if (istop == NULL)
-		exit(EXIT_FAILURE);
 	ivolup = IMG_Load("../pictures/ivolume_up.jpg");
-	if (ivolup == NULL)
-		exit(EXIT_FAILURE);
 	ivoldo = IMG_Load("../pictures/ivolume_down.jpg");
-	if (ivoldo == NULL)
-		exit(EXIT_FAILURE);
 
 	return EXIT_SUCCESS;
 }
