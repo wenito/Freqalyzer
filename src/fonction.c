@@ -79,7 +79,7 @@ int W_GestionErreur(int sujet,int valeur, SDL_Surface *surface, const char *titr
 				return EXIT_SUCCESS;
 			break;
 		case P_LECTURE:
-			if(valeur != 0)
+			if(valeur != FMOD_OK)
 			{
 				printf("\nErreur lors de la lecture\n");
 				exit(EXIT_FAILURE);
@@ -107,7 +107,7 @@ int W_GestionErreur(int sujet,int valeur, SDL_Surface *surface, const char *titr
 	}
 }
 
-//Chargement de l'image de fond
+//Chargement de l'image de fond (not yet functionning)
 int W_LoadSurface(SDL_Surface *fond, SDL_Surface *play, SDL_Surface *pause, SDL_Surface *stop, SDL_Surface *volup, SDL_Surface *voldo, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo)
 {
 	fond = IMG_Load("../pictures/fond.jpg");
@@ -125,7 +125,7 @@ int W_LoadSurface(SDL_Surface *fond, SDL_Surface *play, SDL_Surface *pause, SDL_
 	return EXIT_SUCCESS;
 }
 
-
+//(not yet functionning)
 void W_event(SDL_Surface *ecran, SDL_Surface *iplay, SDL_Surface *ipause, SDL_Surface *istop, SDL_Surface *ivolup, SDL_Surface *ivoldo)
 {
 	SDL_Rect pos_set;

@@ -9,14 +9,23 @@
 * (continuité du projet de L3 - niversité de Rennes 1 - France)
 */
 
-#include <fmod/fmod.h>
-#include <fmod/fmod_errors.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <fmod/fmod.h>
+#include <fmod/fmod_errors.h>
 #include "constantes.h"
+
+/**
+* \fn int main(int argc, char *argv[])
+* \brief Fonction principale
+*
+* \param[in] argc
+* \param[in] *argv[] Pointeur sur des arguments du programme
+* \return EXIT_SUCCESS - Arrêt normal du programme
+*/
 
 int main(int argc, char *argv[])
 {
@@ -113,7 +122,7 @@ int main(int argc, char *argv[])
 	result = FMOD_System_Init(system, 32, FMOD_INIT_NORMAL, extradriverdata);
 	W_GestionErreur(P_CHARGSON, result, NULL, "");
 
-	result = FMOD_System_CreateSound(system, "../sounds/pacman.wav", FMOD_2D | FMOD_CREATESTREAM, 0, &sound);
+	result = FMOD_System_CreateSound(system, "../sounds/radio_sig.mp3", FMOD_2D | FMOD_CREATESTREAM, 0, &sound);
 
 /*	//Chargement du son
 	result = FMOD_System_CreateSound(system, argv[1], FMOD_2D | FMOD_CREATESTREAM, 0, &sound);
